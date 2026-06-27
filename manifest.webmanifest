@@ -1,0 +1,21 @@
+{
+  "name": "ЗооДуо",
+  "short_name": "ЗооДуо",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f6fff0",
+  "theme_color": "#58cc02",
+  "description": "Обучающее приложение по молочному скотоводству",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

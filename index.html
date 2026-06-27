@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#58cc02">
+<link rel="manifest" href="manifest.webmanifest">
+<title>ЗооДуо</title>
+<style>
+:root{
+  --green:#58cc02; --green2:#46a302; --blue:#1cb0f6; --red:#ff4b4b; --yellow:#ffc800;
+  --bg:#f6fff0; --card:#fff; --text:#25301f; --muted:#697763; --line:#d9e7d2;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:linear-gradient(180deg,#ecffd8,#fff);color:var(--text)}
+.app{max-width:520px;margin:0 auto;min-height:100vh;padding:env(safe-area-inset-top) 16px calc(14px + env(safe-area-inset-bottom));display:flex;flex-direction:column}
+.top{height:62px;display:flex;align-items:center;gap:10px}
+.logo{font-weight:950;font-size:24px}.pill{margin-left:auto;background:#e7f8dc;color:var(--green2);padding:8px 10px;border-radius:999px;font-weight:900}
+.screen{display:none;flex:1}.screen.active{display:block}
+.card{background:var(--card);border:2px solid #e2eddc;border-radius:28px;padding:20px;box-shadow:0 8px 0 #d5e3cf;margin-bottom:16px}
+.hero{text-align:center;padding-top:18px}.cow{font-size:74px}.h1{font-size:34px;font-weight:950;line-height:1.05;margin:8px 0}.sub{color:var(--muted);font-size:17px;line-height:1.35}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.tile{border:2px solid var(--line);background:#fff;border-radius:20px;padding:16px;min-height:105px;text-align:left;box-shadow:0 5px 0 #d6e2d0;font-weight:950;font-size:17px}
+.tile small{display:block;color:var(--muted);font-weight:700;margin-top:5px}.wide{grid-column:span 2}
+button{font-family:inherit;cursor:pointer}.primary{width:100%;border:0;border-radius:18px;background:var(--green);color:white;min-height:56px;font-size:18px;font-weight:950;box-shadow:0 5px 0 var(--green2);text-transform:uppercase}.secondary{width:100%;border:2px solid var(--line);border-radius:18px;background:#fff;min-height:52px;font-size:16px;font-weight:900;margin-top:10px;color:#52604c}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{background:#f4fbef;border:1px solid #dcebd4;border-radius:18px;padding:12px;text-align:center}.stat b{font-size:22px;display:block}.stat span{font-size:12px;color:var(--muted);font-weight:800}
+.progress-wrap{height:16px;background:#dcf0d0;border-radius:999px;overflow:hidden;flex:1}.progress{height:100%;width:0;background:var(--green);transition:.25s}.bar{display:flex;align-items:center;gap:10px;margin:8px 0 16px}.x{width:36px;height:36px;border:0;border-radius:50%;background:#ecf6e5;font-size:22px;color:#6c7866}.hearts{font-size:24px;min-width:88px;text-align:right}
+.qtopic{font-weight:950;color:var(--green2);background:#ecf9e4;display:inline-block;padding:8px 12px;border-radius:999px}.question{font-size:25px;line-height:1.18;font-weight:950;margin:18px 0}.options{display:grid;gap:12px}.option{border:2px solid var(--line);background:#fff;border-radius:18px;padding:15px;min-height:62px;text-align:left;font-size:17px;font-weight:850;box-shadow:0 5px 0 #d6e2d0;display:flex;gap:10px;align-items:center}.option.selected{border-color:var(--blue);background:#eef9ff;box-shadow:0 5px 0 #b8e8ff}.option.correct{border-color:var(--green);background:#efffe6}.option.wrong{border-color:var(--red);background:#fff0f0}.letter{min-width:30px;height:30px;background:#f1f7ed;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:950}
+.feedback{position:fixed;left:0;right:0;bottom:0;display:none;padding:18px 16px calc(18px + env(safe-area-inset-bottom));border-radius:28px 28px 0 0;box-shadow:0 -8px 25px rgba(0,0,0,.14)}.feedback.good{background:#eaffdc;color:#1e6900}.feedback.bad{background:#fff0f0;color:#9d1111}.feedback h2{margin:0 0 8px}.feedback p{margin:0 0 14px;font-weight:650;line-height:1.35}
+.lesson{border-left:6px solid var(--green);background:#fbfff8;border-radius:16px;padding:14px;margin:10px 0}.lesson b{display:block;margin-bottom:4px}
+.dark{--bg:#101510;--card:#182016;--text:#eef8ea;--muted:#b8c6b3;--line:#33422d;background:#0f160f}.dark body{background:#0f160f}
+body.dark{background:#0f160f}.dark .card,.dark .tile,.dark .option,.dark .secondary{background:#172116;border-color:#33422d;color:var(--text);box-shadow:0 5px 0 #273323}.dark .stat{background:#1e2a1b;border-color:#33422d}.dark .sub,.dark .tile small{color:#b8c6b3}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top"><div class="logo">🐄 ЗооДуо</div><div class="pill" id="xpPill">0 XP</div></div>
+
+  <main id="home" class="screen active">
+    <div class="card hero">
+      <div class="cow">🐮</div>
+      <div class="h1">Прокачай зоотехника</div>
+      <p class="sub">Обучение, экзамен, жизни, XP, серия дней, достижения и справочник.</p>
+    </div>
+    <div class="card stats">
+      <div class="stat"><b id="xpStat">0</b><span>XP</span></div>
+      <div class="stat"><b id="streakStat">0</b><span>серия</span></div>
+      <div class="stat"><b id="bestStat">0%</b><span>лучший</span></div>
+    </div>
+    <div class="grid">
+      <button class="tile" onclick="startQuiz('learn')">📚 Обучение<small>ответ сразу</small></button>
+      <button class="tile" onclick="startQuiz('exam')">🎓 Экзамен<small>итог в конце</small></button>
+      <button class="tile" onclick="startQuiz('random')">🎲 Случайно<small>10 вопросов</small></button>
+      <button class="tile" onclick="show('guide')">📖 Справочник<small>короткие схемы</small></button>
+      <button class="tile wide" onclick="show('achievements')">🏆 Достижения<small>уровни и прогресс</small></button>
+      <button class="tile wide" onclick="toggleTheme()">🌙 Переключить тему<small>светлая / темная</small></button>
+    </div>
+  </main>
+
+  <main id="quiz" class="screen">
+    <div class="bar"><button class="x" onclick="show('home')">×</button><div class="progress-wrap"><div class="progress" id="progress"></div></div><div class="hearts" id="hearts">❤️❤️❤️</div></div>
+    <div class="card">
+      <div class="qtopic" id="qtopic"></div>
+      <div class="question" id="question"></div>
+      <div class="options" id="options"></div>
+    </div>
+    <button class="primary" id="check" disabled onclick="check()">Проверить</button>
+    <button class="primary" id="next" style="display:none" onclick="next()">Дальше</button>
+  </main>
+
+  <main id="result" class="screen">
+    <div class="card hero">
+      <div class="cow" id="resIcon">🏆</div>
+      <div class="h1" id="resTitle">Результат</div>
+      <p class="sub" id="resText"></p>
+      <button class="primary" onclick="show('home')">На главную</button>
+      <button class="secondary" onclick="startQuiz(lastMode)">Повторить</button>
+    </div>
+    <div class="card" id="mistakes"></div>
+  </main>
+
+  <main id="guide" class="screen">
+    <div class="card"><div class="h1">📖 Справочник</div><p class="sub">Главные схемы, которые надо держать в голове.</p></div>
+    <div class="card">
+      <div class="lesson"><b>Жир молока</b>peNDF → жвачка → слюна → pH рубца → ацетат → жир молока</div>
+      <div class="lesson"><b>Ацидоз</b>избыток крахмала → кислоты → низкий pH → падение переваримости клетчатки</div>
+      <div class="lesson"><b>Кетоз</b>отел → дефицит энергии → мобилизация жира → кетоновые тела</div>
+      <div class="lesson"><b>Воспроизводство</b>Preg Rate = Service Rate × Conception Rate</div>
+      <div class="lesson"><b>Парез</b>отел → высокая потребность в Ca → гипокальциемия → мышечная слабость</div>
+      <button class="secondary" onclick="show('home')">Назад</button>
+    </div>
+  </main>
+
+  <main id="achievements" class="screen">
+    <div class="card"><div class="h1">🏆 Достижения</div><p class="sub" id="achText"></p></div>
+    <div class="card">
+      <div class="lesson"><b>🥛 Новичок</b>набрать 50 XP</div>
+      <div class="lesson"><b>🐄 Зоотехник</b>набрать 200 XP</div>
+      <div class="lesson"><b>🌾 Ведущий специалист</b>набрать 500 XP</div>
+      <div class="lesson"><b>🧠 Эксперт</b>получить 90%+ на экзамене</div>
+      <button class="secondary" onclick="show('home')">Назад</button>
+    </div>
+  </main>
+</div>
+
+<div class="feedback" id="feedback">
+  <h2 id="fbTitle"></h2><p id="fbText"></p>
+  <button class="primary" onclick="next()">Продолжить</button>
+</div>
+
+<script src="questions.js"></script>
+<script>
+let state = JSON.parse(localStorage.getItem('zooduoState') || '{"xp":0,"streak":0,"best":0,"lastDate":""}');
+let quiz=[],current=0,selected=null,score=0,mistakes=[],mode='learn',lastMode='learn',hearts=3;
+function save(){localStorage.setItem('zooduoState',JSON.stringify(state));renderStats()}
+function renderStats(){xpPill.textContent=state.xp+' XP';xpStat.textContent=state.xp;streakStat.textContent=state.streak;bestStat.textContent=state.best+'%';achText.textContent='Сейчас у тебя '+state.xp+' XP. Да, коровы уже начинают уважать.'}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');feedback.style.display='none';renderStats()}
+function shuffle(a){return a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(x=>x[1])}
+function startQuiz(m){mode=m;lastMode=m;current=0;selected=null;score=0;mistakes=[];hearts=3;let pool=shuffle(QUESTIONS); if(m==='random') pool=pool.slice(0,10); quiz=pool.map(q=>{let opts=shuffle(q.opts.map((t,i)=>({t,ok:i===q.a}))); return {...q,opts:opts.map(o=>o.t),a:opts.findIndex(o=>o.ok)}}); show('quiz'); renderQ()}
+function renderQ(){selected=null;progress.style.width=(current/quiz.length*100)+'%';heartsEl=document.getElementById('hearts');heartsEl.textContent='❤️'.repeat(Math.max(0,hearts));let q=quiz[current];qtopic.textContent=q.topic+' • '+(current+1)+'/'+quiz.length;question.textContent=q.q;options.innerHTML='';q.opts.forEach((o,i)=>{let b=document.createElement('button');b.className='option';b.innerHTML='<span class="letter">'+String.fromCharCode(1040+i)+'</span><span>'+o+'</span>';b.onclick=()=>select(i);options.appendChild(b)});check.disabled=true;check.style.display='block';nextBtn=document.getElementById('next');nextBtn.style.display='none'}
+function select(i){selected=i;document.querySelectorAll('.option').forEach((b,n)=>b.classList.toggle('selected',n===i));check.disabled=false}
+function check(){let q=quiz[current], ok=selected===q.a;document.querySelectorAll('.option').forEach((b,n)=>{b.disabled=true;if(n===q.a)b.classList.add('correct');if(n===selected&&!ok)b.classList.add('wrong')});if(ok){score++;state.xp+=10}else{hearts--;mistakes.push({q:q.q,y:q.opts[selected],r:q.opts[q.a],exp:q.exp})}save();check.style.display='none'; if(mode==='learn'){feedback.className='feedback '+(ok?'good':'bad');fbTitle.textContent=ok?'Верно! 🐄':'Не-а, тут корова мотнула головой';fbText.innerHTML=ok?q.exp:'<b>Правильно:</b> '+q.opts[q.a]+'<br>'+q.exp;feedback.style.display='block'}else{next.style.display='block'}}
+function next(){feedback.style.display='none';current++; if(current>=quiz.length) finish(); else renderQ()}
+function finish(){let pct=Math.round(score/quiz.length*100);state.best=Math.max(state.best,pct);let today=new Date().toISOString().slice(0,10); if(state.lastDate!==today){state.streak+=1;state.lastDate=today}save();show('result');resIcon.textContent=pct>=90?'🏆':pct>=70?'🐄':'🐮';resTitle.textContent=pct>=90?'Эксперт!':pct>=70?'Хороший уровень':'Надо докормить знания';resText.textContent=score+' из '+quiz.length+' • '+pct+'%';mistakesEl=document.getElementById('mistakes');mistakesEl.innerHTML='<h2>Ошибки</h2>'+(mistakes.length?mistakes.map(m=>'<div class="lesson"><b>'+m.q+'</b>Ваш ответ: '+m.y+'<br>Правильно: <b>'+m.r+'</b><br>'+m.exp+'</div>').join(''):'<p class="sub">Ошибок нет. Вот это красиво.</p>')}
+function toggleTheme(){document.body.classList.toggle('dark');localStorage.setItem('zooduoTheme',document.body.classList.contains('dark')?'dark':'light')}
+if(localStorage.getItem('zooduoTheme')==='dark')document.body.classList.add('dark');
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}
+renderStats();
+</script>
+</body>
+</html>
